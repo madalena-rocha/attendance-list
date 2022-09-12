@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react'; // useState é o hook que permite a criação de estados
-
 import './styles.css';
+import { Card, CardProps } from '../../components/Card';
 
-import { Card } from '../../components/Card';
+type ProfileResponse = {
+  name: string;
+  avatar_url: string;
+}
+
+type User = {
+  name: string;
+  avatar: string;
+}
 
 export function Home() {
 
   const [studentName, setStudentName] = useState('');
-
-  const [students, setStudents] = useState([]); // armazenar os estudantes da lista de presença
-  
-  const [user, setUser] = useState({ name: '', avatar: '' });
+  const [students, setStudents] = useState<CardProps[]>([]); // armazenar os estudantes da lista de presença
+  const [user, setUser] = useState<User>({} as User);
 
   function handleAddStudent(){
     const newStudent = { // o estudante precisa de duas informações, o nome e o horário que ele entrou na listagem
@@ -30,7 +36,7 @@ export function Home() {
   useEffect(() => { // o useEffect é executado automaticamente assim que a interface é renderizada
     async function fetchData() {
       const response = await fetch('https://api.github.com/users/madalena-rocha');
-      const data = await response.json();
+      const data = await response.json() as ProfileResponse;
       console.log("DADOS ===> ", data);
 
       setUser({ // salvando as informações que a url entregou dentro do estado de user
@@ -43,7 +49,6 @@ export function Home() {
   }, []); // array de dependências vazio: o userEffect será executado uma única vez no carregamento da tela
 
   return (
-    
     <div className="container">
       <header>
         <h1>Lista de Presença</h1>
